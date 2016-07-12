@@ -1,5 +1,5 @@
 function U = Heat1(a,f,u0,g1,g2,L,T,nx,nt)
-%
+
 % function U = Heat1(a,f,u0,g1,g2,L,T,nx,nt)
 %
 % The forward difference scheme for solving the initial-boundary value
@@ -26,16 +26,20 @@ nt1 = nt+1;
 ht = T/nt;
 r = a*ht/(hx*hx)
 r1 = 1-2*r;
+
 % stability test
 if r > 0.5
   disp('The ratio is too big; the scheme is unstable!')
 end
+
 % generate grid point vectors
 xvec = hx*(0:nx);
 tvec = ht*(0:nt);
+
 % initialization
 U = zeros(nt1,nx1);
 U(1,:) = feval(u0,xvec(:)');
+
 % time advancing
 U(2:nt1,1) = feval(g1,(1:nt)*ht);
 U(2:nt1,nx1) = feval(g2,(1:nt)*ht);
@@ -43,6 +47,7 @@ for k = 1:nt
   U(k+1,2:nx) = r*(U(k,1:nx-1)+U(k,3:nx+1))+r1*U(k,2:nx) ...
                 +ht*feval(f,xvec(2:nx),tvec(k));
 end
+
 % plot the numerical solution
 surf(xvec,tvec,U)
 xlabel('x-axis')
